@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>New Order Received</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #4a4a4a;
+      margin-bottom: 20px;
+    }
+    .content {
+      background-color: #f9f9f9;
+      padding: 30px;
+      border-radius: 5px;
+    }
+    .order-details {
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      background-color: white;
+    }
+    .order-item {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .order-total {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .button {
+      display: inline-block;
+      background-color: #f0ad4e;
+      color: white !important;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 4px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+    }
+    .notification-banner {
+      background-color: #d9edf7;
+      color: #31708f;
+      padding: 15px;
+      border-radius: 4px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="https://via.placeholder.com/150x50?text=7irafie" alt="7irafie Logo" class="logo">
+    <h1>New Order Received</h1>
+  </div>
+  
+  <div class="content">
+    <div class="notification-banner">
+      <h2>You have a new order!</h2>
+    </div>
+    
+    <p>Hello {{name}},</p>
+    
+    <p>Great news! You've received a new order for your product or service.</p>
+    
+    <div class="order-details">
+      <h3>Order #{{orderId}}</h3>
+      <p><strong>Date:</strong> {{orderDetails.createdAt}}</p>
+      
+      <div class="order-item">
+        <p><strong>Item:</strong> {{orderDetails.post.title}}</p>
+        <p><strong>Quantity:</strong> {{orderDetails.quantity}}</p>
+        <p><strong>Price per item:</strong> {{orderDetails.post.price}}</p>
+      </div>
+      
+      <div class="order-total">
+        <p>Total: {{orderDetails.totalPrice}}</p>
+      </div>
+      
+      <p><strong>Client Message:</strong> {{orderDetails.description}}</p>
+      <p><strong>Payment Method:</strong> {{orderDetails.paymentMethod}}</p>
+      <p><strong>Delivery Method:</strong> {{orderDetails.deliveryMethod}}</p>
+      
+      {{#if orderDetails.desiredPickupDate}}
+      <p><strong>Desired Pickup/Delivery Date:</strong> {{orderDetails.desiredPickupDate}}</p>
+      {{/if}}
+    </div>
+    
+    <p>Please review this order and update its status (accept/reject) as soon as possible.</p>
+    
+    <div style="text-align: center;">
+      <a href="{{orderUrl}}" class="button">View Order Details</a>
+    </div>
+    
+    <p>Remember to maintain timely communication with your client for a great customer experience!</p>
+  </div>
+  
+  <div class="footer">
+    <p>&copy; 2025 7irafie. All rights reserved.</p>
+    <p>Connecting artisans and clients across the community.</p>
+  </div>
+</body>
+</html>

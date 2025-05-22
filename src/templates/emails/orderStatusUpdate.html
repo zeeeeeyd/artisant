@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Order Status Update</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #4a4a4a;
+      margin-bottom: 20px;
+    }
+    .content {
+      background-color: #f9f9f9;
+      padding: 30px;
+      border-radius: 5px;
+    }
+    .status-update {
+      text-align: center;
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 4px;
+    }
+    .status-accepted {
+      background-color: #dff0d8;
+      color: #3c763d;
+    }
+    .status-rejected {
+      background-color: #f2dede;
+      color: #a94442;
+    }
+    .status-completed {
+      background-color: #d9edf7;
+      color: #31708f;
+    }
+    .status-cancelled {
+      background-color: #fcf8e3;
+      color: #8a6d3b;
+    }
+    .order-details {
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      background-color: white;
+    }
+    .button {
+      display: inline-block;
+      background-color: #5bc0de;
+      color: white !important;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 4px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="https://via.placeholder.com/150x50?text=7irafie" alt="7irafie Logo" class="logo">
+    <h1>Order Status Update</h1>
+  </div>
+  
+  <div class="content">
+    <p>Hello {{name}},</p>
+    
+    <p>There's an update regarding your order #{{orderId}}.</p>
+    
+    <div class="status-update status-{{status}}">
+      <h2>Your order has been {{status}}</h2>
+    </div>
+    
+    <div class="order-details">
+      <h3>Order #{{orderId}}</h3>
+      <p><strong>Item:</strong> {{orderDetails.post.title}}</p>
+      <p><strong>Quantity:</strong> {{orderDetails.quantity}}</p>
+      <p><strong>Total:</strong> {{orderDetails.totalPrice}}</p>
+      <p><strong>Payment Method:</strong> {{orderDetails.paymentMethod}}</p>
+      <p><strong>Delivery Method:</strong> {{orderDetails.deliveryMethod}}</p>
+    </div>
+    
+    <div style="text-align: center;">
+      <a href="{{orderUrl}}" class="button">View Order Details</a>
+    </div>
+    
+    <p>If you have any questions about this update, please contact the artisan directly or our customer support team.</p>
+  </div>
+  
+  <div class="footer">
+    <p>&copy; 2025 7irafie. All rights reserved.</p>
+    <p>Connecting artisans and clients across the community.</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,346 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zipCode:
+              type: string
+            country:
+              type: string
+            coordinates:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lng:
+                  type: number
+        role:
+          type: string
+          enum: [client, artisan, admin]
+        category:
+          type: string
+          enum: [couture, cuisine, peinture, électricité, null]
+        isEmailVerified:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      example:
+        id: 5ebac534954b54139806c112
+        firstName: John
+        lastName: Doe
+        email: john.doe@example.com
+        phone: "+123456789"
+        dateOfBirth: "1990-01-01"
+        address:
+          street: "123 Main St"
+          city: "Anytown"
+          state: "State"
+          zipCode: "12345"
+          country: "Country"
+          coordinates:
+            lat: 45.123
+            lng: -75.123
+        role: client
+        category: null
+        isEmailVerified: false
+        createdAt: 2020-05-12T16:18:04.793Z
+        updatedAt: 2020-05-12T16:18:04.793Z
+    
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        artisan:
+          type: object
+          properties:
+            id:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            email:
+              type: string
+        title:
+          type: string
+        description:
+          type: string
+        media:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              type:
+                type: string
+                enum: [image, video]
+              public_id:
+                type: string
+        type:
+          type: string
+          enum: [vente, commande]
+        price:
+          type: number
+        paymentMethod:
+          type: string
+          enum: [main à main, en ligne]
+        delivery:
+          type: string
+          enum: [disponible, retrait sur place]
+        category:
+          type: string
+          enum: [couture, cuisine, peinture, électricité]
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      example:
+        id: 5ebac534954b54139806c113
+        artisan:
+          id: 5ebac534954b54139806c112
+          firstName: Artisan
+          lastName: Name
+          email: artisan@example.com
+        title: "Handmade Wooden Chair"
+        description: "Beautiful handcrafted wooden chair made from reclaimed wood."
+        media:
+          - url: "https://res.cloudinary.com/demo/image/upload/v1234567890/posts/image1.jpg"
+            type: "image"
+            public_id: "posts/image1"
+        type: "vente"
+        price: 150
+        paymentMethod: "en ligne"
+        delivery: "disponible"
+        category: "couture"
+        isActive: true
+        createdAt: 2020-05-12T16:18:04.793Z
+        updatedAt: 2020-05-12T16:18:04.793Z
+    
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        client:
+          type: object
+          properties:
+            id:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            email:
+              type: string
+        artisan:
+          type: object
+          properties:
+            id:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            email:
+              type: string
+        post:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            price:
+              type: number
+            media:
+              type: array
+              items:
+                type: object
+        description:
+          type: string
+        quantity:
+          type: integer
+        totalPrice:
+          type: number
+        desiredPickupDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, accepted, rejected, completed, cancelled]
+        paymentStatus:
+          type: string
+          enum: [pending, paid, refunded]
+        paymentMethod:
+          type: string
+          enum: [main à main, en ligne]
+        deliveryMethod:
+          type: string
+          enum: [livraison, retrait sur place]
+        deliveryAddress:
+          type: object
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zipCode:
+              type: string
+            country:
+              type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      example:
+        id: 5ebac534954b54139806c114
+        client:
+          id: 5ebac534954b54139806c112
+          firstName: John
+          lastName: Doe
+          email: john.doe@example.com
+        artisan:
+          id: 5ebac534954b54139806c113
+          firstName: Artisan
+          lastName: Name
+          email: artisan@example.com
+        post:
+          id: 5ebac534954b54139806c115
+          title: "Handmade Wooden Chair"
+          price: 150
+          media:
+            - url: "https://res.cloudinary.com/demo/image/upload/v1234567890/posts/image1.jpg"
+              type: "image"
+              public_id: "posts/image1"
+        description: "I would like this in dark brown if possible."
+        quantity: 1
+        totalPrice: 150
+        desiredPickupDate: 2020-06-12T16:18:04.793Z
+        status: pending
+        paymentStatus: pending
+        paymentMethod: "en ligne"
+        deliveryMethod: "livraison"
+        deliveryAddress:
+          street: "123 Main St"
+          city: "Anytown"
+          state: "State"
+          zipCode: "12345"
+          country: "Country"
+        createdAt: 2020-05-12T16:18:04.793Z
+        updatedAt: 2020-05-12T16:18:04.793Z
+    
+    AuthTokens:
+      type: object
+      properties:
+        access:
+          type: object
+          properties:
+            token:
+              type: string
+            expires:
+              type: string
+              format: date-time
+        refresh:
+          type: object
+          properties:
+            token:
+              type: string
+            expires:
+              type: string
+              format: date-time
+      example:
+        access:
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+          expires: 2020-05-12T16:18:04.793Z
+        refresh:
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+          expires: 2020-06-12T16:18:04.793Z
+    
+    Error:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+      example:
+        code: 404
+        message: Not found
+  
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Email already taken
+    
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 401
+            message: Please authenticate
+    
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 403
+            message: Forbidden
+    
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: Not found
