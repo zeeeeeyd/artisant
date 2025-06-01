@@ -5,8 +5,8 @@ const register = {
   body: Joi.object().keys({
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
-    email: Joi.string().required().email(),
-    phone: Joi.string().optional(),
+    email: Joi.string().email(),
+    phone: Joi.string().required(),
     password: Joi.string().required().custom(password),
     dateOfBirth: Joi.date().required(),
     address: Joi.object().keys({
@@ -31,7 +31,7 @@ const register = {
 
 const login = {
   body: Joi.object().keys({
-    email: Joi.string().required(),
+    phone: Joi.string().required(),
     password: Joi.string().required(),
   }),
 };
@@ -50,7 +50,7 @@ const refreshTokens = {
 
 const forgotPassword = {
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
+    phone: Joi.string().required(),
   }),
 };
 

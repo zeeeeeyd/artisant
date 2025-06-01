@@ -19,7 +19,6 @@ const userSchema = mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
       lowercase: true,
@@ -31,6 +30,8 @@ const userSchema = mongoose.Schema(
     },
     phone: {
       type: String,
+      required: true,
+      unique: true,
       trim: true,
     },
     password: {
@@ -107,13 +108,13 @@ userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
 /**
- * Check if email is taken
- * @param {string} email - The user's email
+ * Check if phone is taken
+ * @param {string} phone - The user's phone
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+userSchema.statics.isPhoneTaken = async function (phone, excludeUserId) {
+  const user = await this.findOne({ phone, _id: { $ne: excludeUserId } });
   return !!user;
 };
 
@@ -135,9 +136,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-/**
- * @typedef User
- */
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
