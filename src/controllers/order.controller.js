@@ -5,31 +5,31 @@ const catchAsync = require('../utils/catchAsync');
 const { orderService } = require('../services');
 
 const createOrder = catchAsync(async (req, res) => {
+  // Ensure user is authenticated and is a client
+  if (!req.user || req.user.role !== 'client') {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Only clients can create orders');
+  }
+
   const order = await orderService.createOrder(req.body, req.user);
   res.status(httpStatus.CREATED).send(order);
 });
 
 const getOrders = catchAsync(async (req, res) => {
-  let filter = pick(req.query, ['post', 'status', 'paymentStatus', 'paymentMethod', 'deliveryMethod']);
+  const filter = pick(req.query, ['post', 'status', 'paymentStatus', 'paymentMethod', 'deliveryMethod']);
   
-  // Apply user-specific filters based on role
+  // Apply role-based filters
   if (req.user.role === 'client') {
-    // Clients can only see their own orders
     filter.client = req.user.id;
   } else if (req.user.role === 'artisan') {
-    // Artisans can only see orders for their posts
     filter.artisan = req.user.id;
   } else if (req.user.role === 'admin') {
-    // Admins can see all orders, and can filter by client or artisan if provided
-    if (req.query.client) {
-      filter.client = req.query.client;
-    }
-    if (req.query.artisan) {
-      filter.artisan = req.query.artisan;
-    }
+    if (req.query.client) filter.client = req.query.client;
+    if (req.query.artisan) filter.artisan = req.query.artisan;
   }
-  
+
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  options.populate = 'client artisan post'; // Always populate related data
+
   const result = await orderService.queryOrders(filter, options);
   res.send(result);
 });
@@ -39,16 +39,15 @@ const getOrder = catchAsync(async (req, res) => {
   if (!order) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
   }
-  
-  // Check permissions
-  if (req.user.role === 'client' && order.client.id !== req.user.id) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You do not have permission to view this order');
+
+  // Check authorization
+  if (req.user.role === 'client' && order.client.toString() !== req.user.id) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Not authorized to view this order');
   }
-  
-  if (req.user.role === 'artisan' && order.artisan.id !== req.user.id) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You do not have permission to view this order');
+  if (req.user.role === 'artisan' && order.artisan.toString() !== req.user.id) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Not authorized to view this order');
   }
-  
+
   res.send(order);
 });
 
