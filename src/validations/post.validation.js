@@ -9,6 +9,14 @@ const createPost = {
     price: Joi.number().min(0).required(),
     paymentMethod: Joi.string().valid('main à main', 'en ligne').required(),
     delivery: Joi.string().valid('disponible', 'retrait sur place').required(),
+    // Media is handled by multer middleware, not in body validation
+    media: Joi.array().items(
+      Joi.object().keys({
+        url: Joi.string().required(),
+        type: Joi.string().valid('image', 'video').required(),
+        public_id: Joi.string().required(),
+      })
+    ).optional(),
   }),
 };
 
@@ -48,6 +56,14 @@ const updatePost = {
       paymentMethod: Joi.string().valid('main à main', 'en ligne'),
       delivery: Joi.string().valid('disponible', 'retrait sur place'),
       isActive: Joi.boolean(),
+      // Media can be included in updates as well
+      media: Joi.array().items(
+        Joi.object().keys({
+          url: Joi.string().required(),
+          type: Joi.string().valid('image', 'video').required(),
+          public_id: Joi.string().required(),
+        })
+      ).optional(),
     })
     .min(1),
 };

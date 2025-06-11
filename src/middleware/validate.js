@@ -6,8 +6,21 @@ const ApiError = require('../utils/ApiError');
 const validate = (schema) => (req, res, next) => {
   const validSchema = pick(schema, ['params', 'query', 'body']);
   const object = pick(req, Object.keys(validSchema));
+  
+  // Handle multipart/form-data by allowing unknown keys in body
+  const options = {
+    errors: { label: 'key' }, 
+    abortEarly: false
+  };
+  
+  // If this is a multipart request (has files), allow unknown keys
+  if (req.files && req.files.length > 0) {
+    options.allowUnknown = true;
+    options.stripUnknown = false;
+  }
+  
   const { value, error } = Joi.compile(validSchema)
-    .prefs({ errors: { label: 'key' }, abortEarly: false })
+    .prefs(options)
     .validate(object);
 
   if (error) {

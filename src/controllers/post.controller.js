@@ -18,10 +18,22 @@ const createPost = catchAsync(async (req, res) => {
     mediaArray = await postService.uploadMedia(fileBuffers, fileTypes);
   }
 
+  // Parse media from body if provided (for cases where media URLs are sent directly)
+  if (req.body.media && typeof req.body.media === 'string') {
+    try {
+      req.body.media = JSON.parse(req.body.media);
+    } catch (e) {
+      // If parsing fails, ignore and use uploaded files
+    }
+  }
+
+  // Combine uploaded media with any media provided in body
+  const allMedia = [...mediaArray, ...(req.body.media || [])];
+
   // Create post with media
   const postData = {
     ...req.body,
-    media: mediaArray,
+    media: allMedia,
     artisan: req.user.id // Ensure artisan ID is set from authenticated user
   };
 
@@ -75,16 +87,38 @@ const updatePost = catchAsync(async (req, res) => {
     newMedia = await postService.uploadMedia(fileBuffers, fileTypes);
   }
 
+  // Parse media from body if provided
+  if (req.body.media && typeof req.body.media === 'string') {
+    try {
+      req.body.media = JSON.parse(req.body.media);
+    } catch (e) {
+      // If parsing fails, ignore
+    }
+  }
+
   // Get existing post
   const existingPost = await postService.getPostById(req.params.postId);
   if (!existingPost) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Post not found');
   }
 
+  // Handle media updates
+  let finalMedia = existingPost.media || [];
+  
+  // If new files were uploaded, add them
+  if (newMedia.length > 0) {
+    finalMedia = [...finalMedia, ...newMedia];
+  }
+  
+  // If media array was provided in body, replace existing media
+  if (req.body.media && Array.isArray(req.body.media)) {
+    finalMedia = [...req.body.media, ...newMedia];
+  }
+
   // Combine existing and new media
   const updateData = {
     ...req.body,
-    media: [...(existingPost.media || []), ...newMedia]
+    media: finalMedia
   };
 
   const post = await postService.updatePostById(req.params.postId, updateData, req.user);
