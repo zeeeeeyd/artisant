@@ -9,13 +9,23 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('createPost'), validate(postValidation.createPost), postController.createPost)
+  .post(
+    auth('createPost'), 
+    upload.array('media', 10),
+    validate(postValidation.createPost), 
+    postController.createPost
+  )
   .get(validate(postValidation.getPosts), postController.getPosts);
 
 router
   .route('/:postId')
   .get(validate(postValidation.getPost), postController.getPost)
-  .put(auth('updatePost'), validate(postValidation.updatePost), postController.updatePost)
+  .put(
+    auth('updatePost'), 
+    upload.array('media', 10),
+    validate(postValidation.updatePost), 
+    postController.updatePost
+  )
   .delete(auth('deletePost'), validate(postValidation.deletePost), postController.deletePost);
 
 router
@@ -56,7 +66,7 @@ module.exports = router;
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -74,15 +84,8 @@ module.exports = router;
  *               media:
  *                 type: array
  *                 items:
- *                   type: object
- *                   properties:
- *                     url:
- *                       type: string
- *                     type:
- *                       type: string
- *                       enum: [image, video]
- *                     public_id:
- *                       type: string
+ *                   type: string
+ *                   format: binary
  *               type:
  *                 type: string
  *                 enum: [vente, commande]
@@ -248,7 +251,7 @@ module.exports = router;
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -259,15 +262,8 @@ module.exports = router;
  *               media:
  *                 type: array
  *                 items:
- *                   type: object
- *                   properties:
- *                     url:
- *                       type: string
- *                     type:
- *                       type: string
- *                       enum: [image, video]
- *                     public_id:
- *                       type: string
+ *                   type: string
+ *                   format: binary
  *               type:
  *                 type: string
  *                 enum: [vente, commande]

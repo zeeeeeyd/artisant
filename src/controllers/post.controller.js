@@ -5,6 +5,11 @@ const catchAsync = require('../utils/catchAsync');
 const { postService } = require('../services');
 
 const createPost = catchAsync(async (req, res) => {
+  // Ensure user is authenticated and is an artisan
+  if (!req.user || req.user.role !== 'artisan') {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Only artisans can create posts');
+  }
+
   // Handle file uploads first
   let mediaArray = [];
   if (req.files && req.files.length > 0) {

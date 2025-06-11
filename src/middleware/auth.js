@@ -1,8 +1,9 @@
-const passport = require('passport');
 const httpStatus = require('http-status');
+const jwt = require('jsonwebtoken');
 const ApiError = require('../utils/ApiError');
 const { roleRights } = require('../config/roles');
-const { tokenService } = require('../services');
+const { userService } = require('../services');
+const config = require('../config/config');
 
 const auth = (...requiredRights) => async (req, res, next) => {
   try {
@@ -14,9 +15,16 @@ const auth = (...requiredRights) => async (req, res, next) => {
     
     const token = authHeader.substring(7);
     
-    // Verify token and get user
-    const tokenDoc = await tokenService.verifyToken(token, 'access');
-    req.user = tokenDoc.user;
+    // Verify JWT token directly
+    const payload = jwt.verify(token, config.jwt.secret);
+    
+    // Get user from database
+    const user = await userService.getUserById(payload.sub);
+    if (!user) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'User not found');
+    }
+    
+    req.user = user;
     
     if (requiredRights.length) {
       const userRights = roleRights.get(req.user.role);
@@ -29,7 +37,13 @@ const auth = (...requiredRights) => async (req, res, next) => {
     
     next();
   } catch (error) {
-    next(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
+    if (error instanceof jwt.JsonWebTokenError) {
+      next(new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token'));
+    } else if (error instanceof jwt.TokenExpiredError) {
+      next(new ApiError(httpStatus.UNAUTHORIZED, 'Token expired'));
+    } else {
+      next(error);
+    }
   }
 };
 

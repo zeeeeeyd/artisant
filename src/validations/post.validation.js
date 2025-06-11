@@ -9,13 +9,6 @@ const createPost = {
     price: Joi.number().min(0).required(),
     paymentMethod: Joi.string().valid('main à main', 'en ligne').required(),
     delivery: Joi.string().valid('disponible', 'retrait sur place').required(),
-    media: Joi.array().items(
-      Joi.object().keys({
-        url: Joi.string().required(),
-        type: Joi.string().valid('image', 'video').required(),
-        public_id: Joi.string().required(),
-      })
-    ).optional(),
   }),
 };
 
@@ -55,7 +48,6 @@ const updatePost = {
       paymentMethod: Joi.string().valid('main à main', 'en ligne'),
       delivery: Joi.string().valid('disponible', 'retrait sur place'),
       isActive: Joi.boolean(),
-      // Media validation removed from update since it's handled separately
     })
     .min(1),
 };
